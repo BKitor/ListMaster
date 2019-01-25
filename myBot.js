@@ -1,5 +1,3 @@
-//todo:add clear
-
 const Discord = require("discord.js");
 const fs = require('fs');
 const config = require('./config.json');
@@ -9,10 +7,10 @@ const list = JSON.parse(fs.readFileSync('list.json'));
 client.on("ready", () => {
   console.log("I am ready!");
 });
- 
+
 client.on("message", (message) => {
   if(message.author.bot||message.channel.name!=config.allowedChanel)return;
-  message.delete(config.messageDeletetime).then(msg=>console.log(`deleted message from ${message.author.username} in ${message.channel.name}`)).catch(console.error);	
+  message.delete(config.messageDeletetime).then(msg=>console.log(`deleted message from ${message.author.username} in ${message.channel.name}`)).catch(console.error);
   if(!message.content.startsWith(config.prefix))return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
@@ -42,7 +40,7 @@ client.on("message", (message) => {
       return;
     };
     console.log(numElements);
-    message.channel.bulkDelete(numElements+1);    
+    message.channel.bulkDelete(numElements+1);
   }
 
   if(command === 'remove'){
@@ -67,7 +65,7 @@ client.on("message", (message) => {
 
   if(command === 'cls'){
     clearChat(message.channel);
-   }   
+   }
 
   if(command === 'help'||command === 'h'){
     message.channel.send(config.helpText).then(msg=>msg.delete(config.helpMSGDeleteTime))
@@ -79,8 +77,9 @@ const clearChat= async (chan)=>{
   let msgs;
   do{
     msgs = await chan.fetchMessages({limit:50});
-    chan.bulkDelete(msgs);
-  }while(fetched.size>=2);
+    chan.bulkDelete(msgs).catch(console.error);
+  }while(msgs.size>=2);
+  console.log("Removed Everything")
 }
 
 const printList=(msg)=>{
@@ -89,8 +88,8 @@ const printList=(msg)=>{
     });
 }
 
-const reprintList=(msg)=>{
-  clearChat(msg.channel);
+const reprintList=async (msg)=>{
+  await clearChat(msg.channel);
   printList(msg);
 }
 
