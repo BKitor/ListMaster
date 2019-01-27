@@ -29,7 +29,7 @@ client.on("message", (message) => {
   if(command === 'clearlist'){
     list.list = [];
     saveList();
-    reprintList();
+    reprintList(message);
   }
 
   //clear the chat
