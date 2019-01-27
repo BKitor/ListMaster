@@ -1,7 +1,6 @@
 const fs = require("fs");
 const list = require("./list.json");
 
-
 const clearChat = async (msg)=>{
     let msgs;
     do{
@@ -14,8 +13,9 @@ exports.clearChat=clearChat;
 
 const printList=(msg)=>{
     list.list.forEach((listItem, index)=>{
-      msg.channel.send(index+1+". "+listItem);
+      msg.channel.send(index+1+". "+listItem).catch(err=>console.error);
     });
+    msg.channel.send("done");
 }
 exports.printList=printList;
 
@@ -24,9 +24,16 @@ exports.reprintList=async (msg)=>{
   printList(msg);
 }
 
-exports.saveList=()=>{
+exports.saveList=async()=>{
   fs.writeFile('list.json', JSON.stringify(list), finished);
-  function finished(err){
-    console.log('File saved');
-  }
+}
+
+exports.backupList=()=>{
+  const backupList = ("./list.json");
+  fs.writeFile('backupList.json', JSON.stringify(list), finished)
+}
+
+function finished(err){
+  if(err)console.error(err);
+  console.log('File saved');
 }
