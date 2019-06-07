@@ -2,3 +2,4 @@ config.json
 node_modules
 list.json
 backupList.json
+package-lock.json
