@@ -3,7 +3,7 @@ module.exports = (client, message)=>{
   //Ignore all bots
   if(message.author.bot)return;
   if(message.channel.name!==config.allowedChanel)return;
-  //Ignore messaes not starting with the prefi (in config.json)
+  //Ignore messaes not starting with the prefix (in config.json)
   if(message.content.indexOf(client.config.prefix)!== 0){
     message.delete(100).catch(err=>console.error);
     return;
