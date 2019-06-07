@@ -12,25 +12,29 @@ const clearChat = async (msg) => {
 }
 exports.clearChat = clearChat;
 
-const printList = (msg) => {
-  list.list.forEach((listItem, index) => {
-    msg.channel.send(index + 1 + ". " + listItem).catch(err => console.error);
-  });
-  msg.channel.send("done");
+const printList = (textChannel) => {
+  for (i = 0; i < list.list.length; i++) {
+    this.sendListItem(i, textChannel)
+  }
+  textChannel.send("done");
 }
 exports.printList = printList;
 
 exports.reprintList = async (msg) => {
   await clearChat(msg);
-  printList(msg);
+  printList(msg.channel);
 }
 
 exports.saveList = async () => {
   fs.writeFile('list.json', JSON.stringify(list), finished);
 }
 
-
 function finished(err) {
   if (err) console.error(err);
   console.log('File saved');
+}
+
+exports.sendListItem = (itemIndex, textChannel) => {
+  textChannel.send(itemIndex + 1 + ". " + list.list[itemIndex])
+    .then(message => message.react("❌"));
 }
