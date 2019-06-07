@@ -1,3 +1,4 @@
+//Utility library
 const fs = require("fs");
 const list = require("./list.json");
 
@@ -28,10 +29,6 @@ exports.saveList=async()=>{
   fs.writeFile('list.json', JSON.stringify(list), finished);
 }
 
-exports.backupList=()=>{
-  const backupList = ("./list.json");
-  fs.writeFile('backupList.json', JSON.stringify(list), finished)
-}
 
 function finished(err){
   if(err)console.error(err);
