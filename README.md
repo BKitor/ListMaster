@@ -1,6 +1,6 @@
 # ListMaster
 
-Listmaster is a discord bot writen using the `discord.js` framework.
+Listmaster is a discord bot writen using the `discord.js` framework for tracking items in a list in it's own Channel.
 
 After installing run:
 
