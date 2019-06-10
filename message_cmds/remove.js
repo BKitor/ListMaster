@@ -1,3 +1,5 @@
+//rewrite to remove individual obj and not constnatly reprint
+
 const list = require("../list.json");
 const listFuncs = require("../listFuncs.js");
 

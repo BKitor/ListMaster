@@ -13,7 +13,7 @@ module.exports = (client, message) => {
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
   //grab the command data from the client.commands Enmap
-  const cmd = client.commands.get(command);
+  const cmd = client.message_cmds.get(command);
   //if that command doesn't exist, silently exit and do nothing
   if (!cmd) {
     message.delete(100).catch(err => console.error);
