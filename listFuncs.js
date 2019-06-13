@@ -3,7 +3,6 @@
 const fs = require("fs");
 
 class ListWrapper {
-
   //this is a singleton!!!
   constructor() {
     if (!ListWrapper._instance) {
@@ -22,7 +21,7 @@ class ListWrapper {
     this._saveList()
   }
 
-  moveDone = (textChannel) => {
+  moveDone = async (textChannel) => {
     textChannel.fetchMessage(doneFlake)
       .then(msg => msg.delete());
     textChannel.send("done")
@@ -30,12 +29,10 @@ class ListWrapper {
     this._saveList();
   }
 
-
   reprintList = async (msg) => {
     await clearChat(msg);
     this.printList(msg.channel);
   }
-
 
   _saveList = async () => {
     fs.writeFile('./list.json', JSON.stringify(this._list), _finished);
@@ -72,16 +69,18 @@ class ListWrapper {
       });
   }
 
-  addListItem = async (textChannel) => {
-
+  addListItem = async (textChannel, itemName) => {
+    this._list.list.push(itemName);
+    await this.sendListItem(this._list.list.length-1, textChannel);
+    this.moveDone(textChannel);
   }
 
   removeItemByName = () => {
-
+    
   }
 }
 
-const List = ListWrapper();
+const List = new ListWrapper();
 Object.freeze(List);
 
-export default List;
+exports.List = (List);

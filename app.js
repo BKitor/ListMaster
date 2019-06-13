@@ -1,4 +1,4 @@
-//TODO:display message when bot succesfuly restarted
+//TODO:display message when bot successfully restarted
 const Discord = require("discord.js");
 const Enmap = require("enmap");
 const fs = require("fs");
@@ -8,7 +8,7 @@ const client = new Discord.Client();
 const config = require("./config.json");
 client.config = config;
 
-client.ListWrapper = ListWrapper();
+client.ListWrapper = ListWrapper;
 client.reaction_cmds = new Enmap();
 client.message_cmds = new Enmap();
 
