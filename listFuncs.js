@@ -27,7 +27,7 @@ class ListWrapper {
     if (this._list.doneFlake) {
       textChannel.fetchMessage(this._list.doneFlake)
         .then(msg => msg.delete())
-        .catch((err)=>console.log("no done flake"));
+        .catch((err) => console.log("no done flake"));
     }
     textChannel.send("done")
       .then(msg => this._list.doneFlake = msg.id);
@@ -44,10 +44,10 @@ class ListWrapper {
 
   clearChat = async (textChannel) => {
     textChannel.bulkDelete(this._list.listFlakes)
-    .catch((err)=>console.log("bulk didn't go"));
+      .catch((err) => console.log("bulk didn't go"));
 
     textChannel.bulkDelete([this._list.doneFlake])
-    .catch((err)=>console.log('done didn"t go'));
+      .catch((err) => console.log('done didn"t go'));
   }
 
   reprintList = async (channel) => {
@@ -63,7 +63,7 @@ class ListWrapper {
     });
   }
 
-  sendListItem = async (itemIndex, textChannel)=>{
+  sendListItem = async (itemIndex, textChannel) => {
     const msg = await textChannel.send((itemIndex + 1) + ". " + this._list.list[itemIndex])
     msg.react("❌").catch((err) => console.log(err));
     this._list.listFlakes[itemIndex] = msg.id;
@@ -88,10 +88,24 @@ class ListWrapper {
       await this.sendListItem(this._list.list.length - 1, textChannel);
       await this.moveDone(textChannel);
       this._saveList();
-      console.log('exit addListItem()')
     }
   }
 
+  addListOfItems = async (textChannel, listOfItems) => {
+    console.log(listOfItems[1])
+    var cnt=0
+    for(var i =0; i<listOfItems.length; i++){
+      if(!(await this.containsItem(listOfItems[i]))){
+        this._list.list.push(listOfItems[i]);
+        cnt++
+      }
+    }
+    for(; cnt>0;cnt--){
+      this.sendListItem(this._list.list.length-cnt, textChannel)
+    }
+    this.moveDone(textChannel);
+    this._saveList();
+  }
 
   containsItem = async (string) => {
     return !(this._list.list.indexOf(string) == -1)
