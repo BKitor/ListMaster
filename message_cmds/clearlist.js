@@ -1,6 +1,6 @@
 const listWrapper = require("../listFuncs.js").ListWrapper;
 
-exports.run = (client, message, args)=>{
-  listWrapper.nukeList();
+exports.run = async (client, message, args)=>{
   listWrapper.clearChat(message.channel);
+  message.delete(100);
 }

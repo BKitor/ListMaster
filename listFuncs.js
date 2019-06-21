@@ -35,15 +35,19 @@ class ListWrapper {
 
   printList = async (textChannel) => {
     for (var i = 0; i < this._list.list.length; i++) {
-      this.sendListItem(i, textChannel);
+      await this.sendListItem(i, textChannel);
     }
-    this.moveDone(textChannel);
+    await this.moveDone(textChannel);
     this._saveList();
   }
 
 
   clearChat = async (textChannel) => {
-    textChannel.bulkDelete(this._list.listFlakes);
+    textChannel.bulkDelete(this._list.listFlakes)
+    .catch((err)=>console.log("bulk didn't go"));
+
+    textChannel.bulkDelete([this._list.doneFlake])
+    .catch((err)=>console.log('done didn"t go'));
   }
 
   reprintList = async (channel) => {
@@ -97,7 +101,7 @@ class ListWrapper {
 
   }
 
-  nukeList = () => {
+  nukeList = async () => {
     this._list.list = [];
     this._list.listFlakes = [];
     this._list.doneFlake = "";
