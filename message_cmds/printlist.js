@@ -1,5 +1,5 @@
-const listFuncs = require("../listFuncs.js");
+const listWrapper = require("../listFuncs.js").ListWrapper;
 exports.run=(client, message, args)=>{
-  listFuncs.printList(message.channel);
+  listWrapper.printList(message.channel);
   message.delete(100).catch(err=>console.error);
 }

@@ -1,4 +1,4 @@
-const listFuncs = require("../listFuncs.js");
-exports.run=(client, message, args)=>{
-  listFuncs.clearChat(message);
+const listWrapper = require('../listFuncs').ListWrapper;
+exports.run=(client, message, agrs)=>{
+    listWrapper.clsChat(message.channel);
 }

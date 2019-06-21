@@ -5,6 +5,13 @@ const fs = require("fs");
 class ListWrapper {
   //this is a singleton!!!
   constructor() {
+
+    if ((!fs.existsSync("./list.json")) || (fs.readFileSync("./list.json").length === 0)) {
+      console.log("Creating list.json")
+      const fileContents = `{ "list": [], "listFlakes":[], "latestAddition": [], "doneFlake":"" }`;
+      fs.writeFileSync("./list.json", fileContents)
+    }
+
     if (!ListWrapper._instance) {
       this._list = JSON.parse(fs.readFileSync("./list.json"));
       ListWrapper.instance = this
@@ -12,52 +19,54 @@ class ListWrapper {
     return ListWrapper._instance
   }
 
-  printList = (textChannel) => {
-    for (i = 0; i < this._list.list.length; i++) {
-      this.sendListItem(i, textChannel)
-    }
-    textChannel.send("done")
-      .then(msg => this._list.doneFlake = msg.id);
-    this._saveList()
+  clsChat = async (textChannel) => {
+    textChannel.bulkDelete(50);
   }
 
   moveDone = async (textChannel) => {
-    textChannel.fetchMessage(doneFlake)
-      .then(msg => msg.delete());
+    if (this._list.doneFlake) {
+      textChannel.fetchMessage(this._list.doneFlake)
+        .then(msg => msg.delete())
+        .catch((err)=>console.log("no done flake"));
+    }
     textChannel.send("done")
       .then(msg => this._list.doneFlake = msg.id);
+  }
+
+  printList = async (textChannel) => {
+    for (var i = 0; i < this._list.list.length; i++) {
+      this.sendListItem(i, textChannel);
+    }
+    this.moveDone(textChannel);
     this._saveList();
   }
 
-  reprintList = async (msg) => {
-    await clearChat(msg);
-    this.printList(msg.channel);
+
+  clearChat = async (textChannel) => {
+    textChannel.bulkDelete(this._list.listFlakes);
+  }
+
+  reprintList = async (channel) => {
+    await this.clearChat(channel);
+    this.printList(channel);
   }
 
   _saveList = async () => {
-    fs.writeFile('./list.json', JSON.stringify(this._list), _finished);
+    console.log("save Called")
+    fs.writeFile('./list.json', JSON.stringify(this._list), (err) => {
+      if (err) console.log(err);
+      else console.log("File Saved")
+    });
   }
 
-  sendListItem = (itemIndex, textChannel) => {
-    textChannel.send((itemIndex + 1) + ". " + this._list.list[itemIndex])
-      .then(message => {
-        message.react("❌");
-        this._list.listFlakes[itemIndex] = message.id;
-      });
-  }
-
-  clearChat = async (textChannel) => {
-    textChannel.bulkDelete(_list.listFlakes)
-      .then((msgs) => this.moveDone(textChannel));
-  }
-
-  _finished = (err) => {
-    if (err) console.error(err);
-    console.log('File saved');
+  sendListItem = async (itemIndex, textChannel)=>{
+    const msg = await textChannel.send((itemIndex + 1) + ". " + this._list.list[itemIndex])
+    msg.react("❌").catch((err) => console.log(err));
+    this._list.listFlakes[itemIndex] = msg.id;
   }
 
   removeItemByIndex = async (index, textChannel) => {
-    textChannel.fetchMessage(this._list.listFlakes[index])
+    fetchedMsg = await textChannel.fetchMessage(this._list.listFlakes[index])
       .then(message => {
         message.delete();
         this._list.list.splice(index, index);
@@ -70,17 +79,33 @@ class ListWrapper {
   }
 
   addListItem = async (textChannel, itemName) => {
-    this._list.list.push(itemName);
-    await this.sendListItem(this._list.list.length-1, textChannel);
-    this.moveDone(textChannel);
+    if (!(await this.containsItem(itemName))) {
+      this._list.list.push(itemName);
+      await this.sendListItem(this._list.list.length - 1, textChannel);
+      await this.moveDone(textChannel);
+      this._saveList();
+      console.log('exit addListItem()')
+    }
+  }
+
+
+  containsItem = async (string) => {
+    return !(this._list.list.indexOf(string) == -1)
   }
 
   removeItemByName = () => {
-    
+
+  }
+
+  nukeList = () => {
+    this._list.list = [];
+    this._list.listFlakes = [];
+    this._list.doneFlake = "";
+    this._saveList();
   }
 }
 
-const List = new ListWrapper();
-Object.freeze(List);
+const listWrapper = new ListWrapper();
+Object.freeze(listWrapper);
 
-exports.List = (List);
+module.exports.ListWrapper = listWrapper

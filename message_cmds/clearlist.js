@@ -1,9 +1,6 @@
-const list = require("../list.json");
-const listFuncs = require("../listFuncs.js");
+const listWrapper = require("../listFuncs.js").ListWrapper;
 
-exports.run=(client, message, args)=>{
-  list.latestAddition = list.list;
-  list.list = [];
-  listFuncs.saveList();
-  listFuncs.reprintList(message);
+exports.run = (client, message, args)=>{
+  listWrapper.nukeList();
+  listWrapper.clearChat(message.channel);
 }

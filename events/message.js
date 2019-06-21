@@ -20,4 +20,5 @@ module.exports = (client, message) => {
     return;
   }
   cmd.run(client, message, args);
+  //message.delete(100).catch(err => console.error);
 }

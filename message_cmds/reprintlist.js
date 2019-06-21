@@ -1,4 +1,5 @@
-const listFuncs = require("../listFuncs.js");
-exports.run=(client, message, args)=>{
-  listFuncs.reprintList(message);
+const listWrapper = require("../listFuncs.js").ListWrapper;
+exports.run=async(client, message, args)=>{
+  listWrapper.reprintList(message.channel);
+  message.delete(100);
 }

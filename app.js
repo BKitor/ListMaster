@@ -12,13 +12,6 @@ client.ListWrapper = ListWrapper;
 client.reaction_cmds = new Enmap();
 client.message_cmds = new Enmap();
 
-if ((!fs.existsSync("./list.json")) || (fs.readFileSync("./list.json").length === 0)) {
-  console.log("Creating list.json")
-  const fileContents = `{ "list": [], "listFlakes":[], "latestAddition": [], "doneFlake":"" }`;
-  fs.writeFileSync("./list.json", fileContents)
-}
-
-
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
   files.forEach(file => {
