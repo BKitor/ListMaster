@@ -45,7 +45,7 @@ class ListWrapper {
   clearChat = async (textChannel) => {
     textChannel.bulkDelete(this._list.listFlakes)
       .catch((err) => console.log("bulk didn't go"));
-
+    
     textChannel.bulkDelete([this._list.doneFlake])
       .catch((err) => console.log('done didn"t go'));
   }
