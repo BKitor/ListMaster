@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/Kitorus/ListMaster/issues"
   },
-  "homepage": "https://github.com/Kitorus/ListMaster#readme"
+  "homepage": "https://github.com/Kitorus/ListMaster#readme",
+  "engines": {
+    "node":"12.5"
+  }
 }
