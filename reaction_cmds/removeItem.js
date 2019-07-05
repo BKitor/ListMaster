@@ -1,5 +1,4 @@
-const listFuncs = require("../listFuncs");
+const listWrapper = require("../listFuncs").ListWrapper;
 exports.run=(client, messageReaction, args)=>{
-    const itemIndex = Number(messageReaction.message.content.split(".")[0])+1;
-    
+    listWrapper.removeItemByMessage(messageReaction.message)
 }

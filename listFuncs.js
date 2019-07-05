@@ -69,6 +69,14 @@ class ListWrapper {
     this._list.listFlakes[itemIndex] = msg.id;
   }
 
+  removeItemByMessage = async (message) => {
+    const itemIndex = await this._list.listFlakes.indexOf(message.id.toString())
+    this._list.listFlakes.splice(itemIndex, 1)
+    this._list.list.splice(itemIndex, 1)
+    this._saveList()
+    message.delete(message.id)
+  }
+
   removeItemByIndex = async (index, textChannel) => {
     fetchedMsg = await textChannel.fetchMessage(this._list.listFlakes[index])
       .then(message => {
@@ -109,10 +117,6 @@ class ListWrapper {
 
   containsItem = async (string) => {
     return !(this._list.list.indexOf(string) == -1)
-  }
-
-  removeItemByName = () => {
-
   }
 
   nukeList = async () => {
