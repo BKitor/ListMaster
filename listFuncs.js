@@ -41,11 +41,10 @@ class ListWrapper {
     this._saveList();
   }
 
-
   clearChat = async (textChannel) => {
     textChannel.bulkDelete(this._list.listFlakes)
       .catch((err) => console.log("bulk didn't go"));
-    
+
     textChannel.bulkDelete([this._list.doneFlake])
       .catch((err) => console.log('done didn"t go'));
   }
@@ -71,8 +70,8 @@ class ListWrapper {
 
   removeItemByMessage = async (message) => {
     const itemIndex = await this._list.listFlakes.indexOf(message.id.toString())
-    this._list.listFlakes.splice(itemIndex, 1)
-    this._list.list.splice(itemIndex, 1)
+    await this._list.listFlakes.splice(itemIndex, 1)
+    await this._list.list.splice(itemIndex, 1)
     this._saveList()
     message.delete(message.id)
   }
@@ -90,6 +89,29 @@ class ListWrapper {
       });
   }
 
+  removeListItemByName = async (name, channel) => {
+    const itemIndex = await this._list.list.indexOf(name)
+    channel.bulkDelete([this._list.listFlakes[itemIndex]]);
+    await this._list.listFlakes.splice(itemIndex, 1);
+    await this._list.list.splice(itemIndex, 1);
+    this._saveList();
+  }
+
+  removeListOfItemsByName = async (nameList, channel) => {
+    const itemFlakes = []
+
+    for(var i=0; i<nameList.length; i++){
+      const elementIndex = this._list.list.indexOf(nameList[i])
+      if(elementIndex === -1){continue}
+      await itemFlakes.push(this._list.listFlakes[elementIndex]);
+      this._list.list.splice(elementIndex, 1)
+      this._list.listFlakes.splice(elementIndex, 1) 
+    }
+
+    channel.bulkDelete(itemFlakes)
+    this._saveList()
+  }
+
   addListItem = async (textChannel, itemName) => {
     if (!(await this.containsItem(itemName))) {
       this._list.list.push(itemName);
@@ -101,15 +123,15 @@ class ListWrapper {
 
   addListOfItems = async (textChannel, listOfItems) => {
     console.log(listOfItems[1])
-    var cnt=0
-    for(var i =0; i<listOfItems.length; i++){
-      if(!(await this.containsItem(listOfItems[i]))){
+    var cnt = 0
+    for (var i = 0; i < listOfItems.length; i++) {
+      if (!(await this.containsItem(listOfItems[i]))) {
         this._list.list.push(listOfItems[i]);
         cnt++
       }
     }
-    for(; cnt>0;cnt--){
-      this.sendListItem(this._list.list.length-cnt, textChannel)
+    for (; cnt > 0; cnt--) {
+      this.sendListItem(this._list.list.length - cnt, textChannel)
     }
     this.moveDone(textChannel);
     this._saveList();
