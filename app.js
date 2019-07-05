@@ -1,19 +1,16 @@
-//TODO:display message when bot succesfuly restarted
+//TODO:display message when bot successfully restarted
 const Discord = require("discord.js");
 const Enmap = require("enmap");
 const fs = require("fs");
+const ListWrapper = require("./listFuncs.js")
 
 const client = new Discord.Client();
 const config = require("./config.json");
 client.config = config;
 
-
-if (!fs.existsSync("./list.json")) {
-  console.log("Creating list.json")
-  const fileContents = `{ "list": [], "latestAddition": [] }`;
-  fs.writeFileSync("./list.json", fileContents)
-}
-
+client.ListWrapper = ListWrapper;
+client.reaction_cmds = new Enmap();
+client.message_cmds = new Enmap();
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
@@ -26,17 +23,28 @@ fs.readdir("./events/", (err, files) => {
   });
 });
 
-client.commands = new Enmap();
 
-fs.readdir("./commands/", (err, files) => {
+fs.readdir("./message_cmds/", (err, files) => {
   if (err) return console.error(err);
   files.forEach(file => {
     if (!file.endsWith(".js")) return;
-    let props = require(`./commands/${file}`);
+    let props = require(`./message_cmds/${file}`);
     let commandName = file.split(".")[0];
-    console.log(`Attempting to load command ${commandName}`);
-    client.commands.set(commandName, props);
+    console.log(`Attempting to load message_cmd ${commandName}`);
+    client.message_cmds.set(commandName, props);
   });
+});
+
+
+fs.readdir("./reaction_cmds", (err, files) => {
+  if (err) return console.error(err);
+  files.forEach(file => {
+    if (!file.endsWith(".js")) return;
+    let props = require(`./reaction_cmds/${file}`);
+    let commandName = file.split(".")[0];
+    console.log(`Attempting to load reaction_cmd ${commandName}`);
+    client.reaction_cmds.set(commandName, props);
+  })
 });
 
 client.login(config.token);
