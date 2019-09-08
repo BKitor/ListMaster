@@ -10,11 +10,14 @@ To install the required packages. Next add a `config.json` file in the root of t
 
 ```
 {
-	"token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 	"prefix":"!",
 	"allowedChanel":"grocery_list",
 	"messageDeletetime":100
 }
 ```
 
-Replace the token with your bot's discord token, and allowed channel can be set to the chanel the bot will operate in. 
+Allowed channel can be set to the chanel the bot will operate in, prefix is the identifier for the bot, messageDeletetime is how long a message will apear for before the bot deletes it.
+
+
+The bot's api token is set as an environment variable, 
+DISCORD_TOKEN="***yourToken***"
