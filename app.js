@@ -47,4 +47,4 @@ fs.readdir("./reaction_cmds", (err, files) => {
   })
 });
 
-client.login(process.env['DISCORD_TOKEN']);
+client.login(process.env.DISCORD_TOKEN);

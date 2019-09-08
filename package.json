@@ -7,9 +7,12 @@
     "discord.js": "^11.5.1",
     "enmap": "^5.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "env-cmd": "^10.0.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "source ./runApp.sh",
+    "dev": "env-cmd ./config/dev.env"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,6 @@
   },
   "homepage": "https://github.com/Kitorus/ListMaster#readme",
   "engines": {
-    "node":"12.5"
+    "node": "12.5"
   }
 }

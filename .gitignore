@@ -1,3 +1,5 @@
 node_modules
 list.json
 backupList.json
+config
+.env
