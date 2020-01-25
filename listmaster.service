@@ -1,0 +1,9 @@
+[Unit]
+Description=ListMaster Discord Bot
+
+[Service]
+Type=Simple
+ExecStart=/bin/bash /home/bkitor/Documents/Projects/ListMaster/runApp.sh
+
+[Install]
+WantedBy=multi-user.target
